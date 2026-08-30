@@ -50,8 +50,9 @@ foreach ($domains as $domain) {
         file_put_contents("/usr/local/lsws/conf/sslcerts/" . $domain["domain"] . ".key", file_get_contents("/var/cpanel/ssl/dovecot/mydovecot.key"));
     } else {
         foreach ($sslInfo["data"]["components"] as $v) {
-            if ($v["servername"] == $domain["domain"]) {
-                file_put_contents("/usr/local/lsws/conf/sslcerts/" . $domain["domain"] . ".crt", $v["certificate"]);
+		if ($v["servername"] == $domain["domain"]) {
+                $fullchain = rtrim($v["certificate"]) . "\n" . rtrim($v["cabundle"]) . "\n";
+                file_put_contents("/usr/local/lsws/conf/sslcerts/" . $domain["domain"] . ".crt", $fullchain);
                 file_put_contents("/usr/local/lsws/conf/sslcerts/" . $domain["domain"] . ".key", $v["key"]);
             }
         }
